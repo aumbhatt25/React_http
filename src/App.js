@@ -1,34 +1,26 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import './App.css';
 
-var c=0;
-
 function App() {
-  const [movies, setMovies] = useState({});
   const [moviename, setMoviename] = useState('');
   const [isLoading, setIsloading] = useState(false);
+  const index = useRef(0);
+  console.log(index.current)
 
   function apiHandler(){
     setIsloading(true);
     fetch('https://swapi.dev/api/films/').then((response) => {
       return response.json();
     }).then(data => {
-      setMovies(data.results);
+      console.log(data.results)
       setIsloading(false);     
-       
-      // console.log(c)
-      // console.log(movies[0].title)
 
-      // console.log(movies[0])
+      console.log(data.results[0].title)
 
-      if(movies[c] !== undefined){
-        console.log(movies[c].title)
-        setMoviename(movies[c].title)
-      }
-      c++;
-      if(c>5){
-        c=0;
-      }
+        console.log(data.results[index.current].title)
+        setMoviename(data.results[index.current].title)
+      index.current += 1;
+      index.current = index.current % data.results.length;
     })
   }
 
